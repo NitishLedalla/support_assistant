@@ -1,0 +1,17 @@
+P-001 | License Pricing
+Licenses are sold per seat. Basic costs $40 per seat, Pro costs $80 per seat, and Enterprise costs $120 per seat. Volume discounts apply automatically: Basic orders of 20 or more seats receive 5% off, Pro orders of 15 or more seats receive 10% off, and Enterprise orders of 10 or more seats receive 15% off. The discount applies to the entire order, not only the seats above the threshold. All prices exclude tax.
+
+P-002 | Refunds
+A full refund is available within 14 days of the first payment for any plan. After 14 days, unused seats may be refunded on a pro-rated basis for annual plans only. Monthly plans are not refunded after the 14-day window. Refund requests must include the order ID.
+
+P-003 | Seat Transfers
+A seat may be transferred from one named user to another at any time at no cost. A seat can be transferred at most three times in a calendar month. Transfers do not change the billing amount or the renewal date.
+
+P-004 | Trial Period
+New customers receive a 14-day free trial of the Pro plan with up to 5 seats. No payment method is required to start a trial. At the end of the trial the account is downgraded to a read-only state until a plan is purchased.
+
+P-005 | Support Hours
+Basic customers receive email support with a response target of 2 business days. Pro customers receive email and chat support from 08:00 to 20:00 UTC on business days. Enterprise customers have 24/7 support and a dedicated account manager.
+
+P-006 | Plan Changes
+Customers may upgrade at any time; the price difference is charged immediately on a pro-rated basis. Downgrades take effect at the next renewal date. Upgrading from Basic to Pro or Enterprise keeps all existing seats and users.

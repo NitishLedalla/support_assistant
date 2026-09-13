@@ -1,0 +1,14 @@
+FAQ-01 | How do I add more seats?
+Go to Settings, then Billing, then Seats, and enter the new total. Additional seats are charged immediately at the plan's per-seat price, and any volume discount from policy P-001 is recalculated on the new total.
+
+FAQ-02 | Can I mix plans in one account?
+No. All seats in an account must be on the same plan. To move some users to a higher plan, create a separate account or upgrade the whole account under policy P-006.
+
+FAQ-03 | Do you offer discounts for non-profits or education?
+Yes. Verified non-profit and educational organisations receive an additional 20% off the list price, applied after any volume discount. Contact support with proof of status.
+
+FAQ-04 | How do I get my invoice?
+Invoices are emailed automatically on each billing date and are also available under Settings, then Billing, then Invoices, for the last 24 months.
+
+NOTE-99 | Office Kitchen Guidelines
+Please label your food in the shared fridge and clean the coffee machine after use. The fridge is emptied every Friday at 17:00. This note is unrelated to licensing and should never be returned for a customer question.
