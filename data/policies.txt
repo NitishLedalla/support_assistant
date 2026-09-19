@@ -1,4 +1,4 @@
-P-001 | License Pricing
+p-001 | License Pricing
 Licenses are sold per seat. Basic costs $40 per seat, Pro costs $80 per seat, and Enterprise costs $120 per seat. Volume discounts apply automatically: Basic orders of 20 or more seats receive 5% off, Pro orders of 15 or more seats receive 10% off, and Enterprise orders of 10 or more seats receive 15% off. The discount applies to the entire order, not only the seats above the threshold. All prices exclude tax.
 
 P-002 | Refunds
