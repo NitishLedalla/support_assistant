@@ -16,6 +16,9 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import Command
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.store.memory import InMemoryStore
+from langgraph.store.base import BaseStore
 
 from langsmith import traceable
 from langsmith import Client
@@ -31,14 +34,6 @@ print(os.getenv("LANGSMITH_TRACING"))
 print(os.getenv("LANGSMITH_PROJECT"))
 print(bool(os.getenv("LANGSMITH_API_KEY")))
 print(os.getenv(""))
-
-
-# ---------- LangSmith ----------
-
-client = Client()
-candidate_prompt = client.pull_prompt("candidate_prompt", include_model=True, secrets={"OPENAI_API_KEY": OPENAI_API_KEY})
-candidate_prompt_template = candidate_prompt.steps[0]  # ChatPromptTemplate only — has .format_messages/.metadata
-
 
 
 # ---------- Tools ----------
@@ -142,7 +137,7 @@ def lookup_customer(customer_id: str) -> dict:
     row = row.iloc[0]
     return {
         "name": row["name"],
-        "preferred_tone": row["preferred_tone"],
+        # "preferred_tone": row["preferred_tone"],
         "current_plan": row["current_plan"],
     }
 
@@ -177,15 +172,15 @@ def normalize(state: State):
     return {"messages": [HumanMessage(content=tmp)]}
 
 
-def agent(state: State, config: RunnableConfig):
+def agent(state: State, config: RunnableConfig, store: BaseStore):
     customer_id = config["configurable"].get("customer_id")
     current_run = state.get('run', 0)
 
     if current_run >= 5:
         return {"messages": [], "run": current_run}
 
-    customer_info = lookup_customer(customer_id)
-    tone = customer_info.get("preferred_tone", "neutral")
+    stored_item = store.get(namespace=("customer", customer_id), key="preferred_tone")
+    tone = stored_item.value["preferred_tone"] if stored_item else "neutral"
 
     formatted_messages = candidate_prompt_template.format_messages(tone=tone)
     system_msg = formatted_messages[0]
@@ -197,7 +192,6 @@ def agent(state: State, config: RunnableConfig):
         update["answer"] = response.content
 
     return update
-
 
 class classification_output(BaseModel):
     route: Literal["pricing", "policy", "general"]
@@ -226,18 +220,34 @@ builder.add_edge("normalize", "agent")
 builder.add_conditional_edges("agent", tools_condition)
 builder.add_edge("tools", "agent")
 
-graph = builder.compile()
+memory = InMemorySaver()
+memory_store = InMemoryStore()
+memory_store.put(("customer", "cust_001"), "preferred_tone", {"preferred_tone": "casual"})
+graph = builder.compile(checkpointer=memory, store=memory_store)
+
+client = Client()
+candidate_prompt = client.pull_prompt("candidate_prompt", include_model=True, secrets={"OPENAI_API_KEY": OPENAI_API_KEY})
+candidate_prompt_template = candidate_prompt.steps[0]  # ChatPromptTemplate only — has .format_messages/.metadata
+
 
 result = graph.invoke(
-    {"question": "What does policy P-001 say about refunds?"},
+    {"question": "What does policy P-001 say about refunds?"}, 
     config={
-        "configurable": {"customer_id": "cust_001"},
+        "configurable": {"customer_id": "cust_001", "thread_id": "thread_cust_001"},
         "tags": ["day4", "prompt-version-test"],
         "metadata": {
             "prompt_name": "candidate_prompt",
-            "prompt_commit": candidate_prompt_template.metadata.get("lc_hub_commit_hash"),
-        },
+            "prompt_commit": candidate_prompt_template.metadata.get("lc_hub_commit_hash"),},
+            
+    },
+)
+result2 = graph.invoke(
+    {"question": "What did I just ask you?"},
+    config={
+        "configurable": {"customer_id": "cust_001", "thread_id": "thread_cust_002"},
+        "tags": ["day5", "memory-test"],
     },
 )
 
 print(result)
+print(result2)
